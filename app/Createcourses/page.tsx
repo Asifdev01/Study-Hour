@@ -25,58 +25,50 @@ const CreateCourses = () => {
   const [courseTitle, setCourseTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [courseData, setCourseData] = useState<CourseData | null>(null);
   const router = useRouter();
     const [topic, setTopic] = useState<string>("");
 
 
 
   const handleGenerateCourse = async () => {
-    if (!courseTitle.trim()) {
-      alert("Please enter a course topic");
-      return;
+  if (!courseTitle.trim()) {
+    alert("Please enter a course topic");
+    return;
+  }
+
+  try {
+    setError("");
+    setLoading(true);
+
+    const res = await fetch("http://localhost:5000/api/createCourse", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseTitle: courseTitle,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.message || "Failed to generate course");
     }
 
-    try {
-      setError("");
-      setLoading(true);
+    console.log("Generate course response:", data);
 
-      const res = await fetch("http://localhost:5000/api/createCourse", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          courseTitle: courseTitle,
-        }),
-      });
-      // parse response safely: try JSON, fall back to raw text
-      const raw = await res.text();
-      let data: any = null;
-      try {
-        data = raw ? JSON.parse(raw) : null;
-      } catch (parseErr) {
-        data = { raw };
-      }
+    router.push(`/Generatedcourse?courseId=${data.courseId}`);
 
-      if (!res.ok) {
-        const bodyMsg = data && (data.message || JSON.stringify(data));
-        throw new Error(`Failed to generate course: ${res.status} ${bodyMsg || ''}`);
-      }
+  } catch (err) {
+    console.error("Generate course error", err);
+    setError("Failed to generate course");
+  } finally {
+    setLoading(false);
+  }
+};
 
-      // store response and log it for debugging; do not render UI yet
-      setCourseData(data);
-      router.push("/Generatedcourse");
-      // eslint-disable-next-line no-console
-      console.log('Generate course response:', data);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Generate course error', err);
-      setError('Failed to generate course');
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   return (
     <div className="w-[95%] mx-auto py-1 md:py-5 px-5 mt-1 md:mt-10 mb-10 bg-dot bg-[#E5E5E5]">

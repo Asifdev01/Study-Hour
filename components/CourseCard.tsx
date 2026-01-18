@@ -1,25 +1,36 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import type { Course } from "@/types/course";
-import { useCourse } from "@/context/CourseContext"; // Adjust path as needed
+import { useCourse } from "@/context/CourseContext";
 
-interface Props {
-  courses: Course[]; 
+interface Course {
+  courseTitle: string;
+  courseOverview: string;
 }
 
-const CourseCard = ({ courses }: Props) => {
+interface Props {
+  courses?: Course[];
+}
+
+const CourseCard = ({ courses = [] }: Props) => {
   const { setCourseData } = useCourse();
 
+  if (!courses.length) {
+    return (
+      <p className="text-center text-gray-500 mt-10">
+        No courses available
+      </p>
+    );
+  }
+
   return (
-    <div className="w-full mt-5 flex flex-col md:flex-row gap-7">
+    <div className="w-full mt-2 flex flex-col md:flex-row gap-7">
       {courses.map((course, index) => (
         <Link
           key={index}
           href="/Video"
           className="w-full md:w-1/3"
-          onClick={() => setCourseData(course)} // Saves course to context on click
+          onClick={() => setCourseData(course)}
         >
           <div
             className="h-full p-4 rounded-2xl cursor-pointer
@@ -28,34 +39,28 @@ const CourseCard = ({ courses }: Props) => {
               hover:-translate-y-1
               transition-all duration-300"
           >
-            {/* <div className="relative w-full h-48">
-              <Image
-                src={course.thumbnail || "/placeholder-course.jpg"} 
-                alt={course.courseTitle}
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div> */}
+            {/* Thumbnail above the title */}
+            <img
+              src="/temp.png"
+              alt={`${course.courseTitle} thumbnail`}
+              className="w-full h-40 object-cover rounded-md mb-3"
+            />
 
-            <h3 className="text-lg font-semibold mt-3 line-clamp-2">
-              {course.courseTitle}
-            </h3>
-            
-            <p className="text-gray-600 text-xs mt-1 line-clamp-2">
+            <div className="flex flex-row items-start">
+              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                <span className="text-xl font-bold text-green-500">
+                   &lt;/&gt;
+                </span>
+              </div>
+
+              <h3 className="text-lg font-semibold mt-2 ml-3 line-clamp-2">
+                {course.courseTitle}
+              </h3>
+            </div>
+
+            <p className="text-gray-600 text-xs mt-2 line-clamp-2">
               {course.courseOverview}
             </p>
-{/* 
-            <p className="text-gray-500 text-xs mt-1">
-              {course.instructor || "Expert Instructor"}
-            </p>
-
-            <div className="flex justify-between items-center mt-4 text-sm">
-              <span className="font-medium">⭐ {course.rating || "4.5"}</span>
-              <span className="text-gray-600 text-xs">{course.duration || "Self-paced"}</span>
-              <span className="text-green-600 font-semibold">
-                {course.price || "Free"}
-              </span>
-            </div> */}
           </div>
         </Link>
       ))}
