@@ -24,7 +24,7 @@ const CourseCard = ({ courses = [] }: Props) => {
   }
 
   return (
-    <div className="w-full mt-2 flex flex-col md:flex-row gap-7">
+    <div className="w-full mt-2 flex flex-col md:flex-row">
       {courses.map((course, index) => (
         <Link
           key={index}
@@ -39,7 +39,6 @@ const CourseCard = ({ courses = [] }: Props) => {
               hover:-translate-y-1
               transition-all duration-300"
           >
-            {/* Thumbnail above the title */}
             <img
               src="/temp.png"
               alt={`${course.courseTitle} thumbnail`}
@@ -53,13 +52,13 @@ const CourseCard = ({ courses = [] }: Props) => {
                 </span>
               </div>
 
-              <h3 className="text-lg font-semibold mt-2 ml-3 line-clamp-2">
+              <h3 className="text-md font-semibold mt-2 ml-3 line-clamp-2">
                 {course.courseTitle}
               </h3>
             </div>
 
-            <p className="text-gray-600 text-xs mt-2 line-clamp-2">
-              {course.courseOverview}
+            <p className="text-gray-500 text-xs mt-2 line-clamp-2">
+              This topic provides a brief understanding of the key concepts, purpose, and importance of the subject. It highlights the main ideas and explains how they are relevant in real-world scenarios. {course.courseOverview}
             </p>
           </div>
         </Link>

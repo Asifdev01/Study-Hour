@@ -117,8 +117,14 @@ const Generatedcourse = () => {
         ))}
       </div>
 
-      <div className="mt-10">
-        <CourseCard courses={[courseData]} />
+      <div className="mt-5 mb-10 flex flex-col md:flex-row gap-2">
+        <div className="w-full md:w-full">
+          <CourseCard courses={[courseData]} />
+        </div>
+
+        {/* <div className="w-full md:w-full">
+          <CourseCard courses={[courseData]} />
+        </div> */}
       </div>
     </div>
   );
